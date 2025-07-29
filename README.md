@@ -1,3 +1,34 @@
+```python
+import paramiko
+import json
+
+# Load commands from JSON
+with open("commands.json", "r") as file:
+    data = json.load(file)
+    commands = data["commands"]
+
+# SSH setup
+ssh_key_path = "C:/Users/Ankit-kushwaha90/.ssh/id_ed25519"
+key_passphrase = "ankit99109"
+
+# Load private key with passphrase
+pkey = paramiko.Ed25519Key.from_private_key_file(ssh_key_path, password=key_passphrase)
+
+# Connect to localhost
+client = paramiko.SSHClient()
+client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+client.connect(hostname="localhost", username="Ankit-kushwaha90", pkey=pkey)
+
+# Run each command and print output
+for command in commands:
+    stdin, stdout, stderr = client.exec_command(command)
+    print(f"\n$ {command}")
+    print("Output:", stdout.read().decode())
+    print("Error:", stderr.read().decode())
+
+client.close()
+```
+
 Here is a clear, direct guide to enable the SSH service (OpenSSH Server) in Windows 11:
 
 ## 1️⃣ Check if OpenSSH Server is installed
